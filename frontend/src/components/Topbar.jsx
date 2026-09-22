@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Info, LogOut, AlertTriangle } from 'lucide-react';
+import { Info, LogOut, Settings, AlertTriangle } from 'lucide-react';
 import { C, FONT } from '../constants.js';
 import { api } from '../api.js';
 
@@ -8,6 +8,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
   const [unhealthyAccounts, setUnhealthyAccounts] = useState([]);
   const ref = useRef(null);
 
+  // Close user menu when clicking outside
   useEffect(() => {
     const handleClick = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
@@ -22,8 +23,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
     };
   }, []);
 
-  // Poll account health every 60s so the banner appears within a minute
-  // of Meta rejecting a token.
+  // Check WhatsApp account health
   useEffect(() => {
     let cancelled = false;
 
@@ -52,6 +52,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
 
   return (
     <>
+      {/* WhatsApp Token Warning */}
       {unhealthyAccounts.length > 0 && (
         <div
           onClick={() => onNavigate('admin-settings')}
@@ -79,6 +80,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
         </div>
       )}
 
+      {/* Header */}
       <div
         style={{
           height: 56,
@@ -93,7 +95,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
           position: 'relative',
         }}
       >
-        {/* Logo */}
+        {/* Logo / Home */}
         <button
           onClick={() => onNavigate('home')}
           style={{
@@ -144,6 +146,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
           </div>
         </button>
 
+        {/* Spacer */}
         <div style={{ flex: 1 }} />
 
         {/* About Us */}
@@ -212,11 +215,12 @@ export default function Topbar({ user, onLogout, onNavigate }) {
               overflow: 'hidden',
             }}
           >
-            {(user.displayName || user.username)
+            {(user?.displayName || user?.username || 'A')
               .charAt(0)
               .toUpperCase()}
           </button>
 
+          {/* Admin Dropdown */}
           {userOpen && (
             <div
               style={{
@@ -232,6 +236,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
                 zIndex: 200,
               }}
             >
+              {/* User Information */}
               <div
                 style={{
                   padding: '8px 12px',
@@ -246,7 +251,7 @@ export default function Topbar({ user, onLogout, onNavigate }) {
                     color: C.text,
                   }}
                 >
-                  {user.displayName || user.username}
+                  {user?.displayName || user?.username || 'Admin'}
                 </div>
 
                 <div
@@ -256,10 +261,43 @@ export default function Topbar({ user, onLogout, onNavigate }) {
                     marginTop: 2,
                   }}
                 >
-                  {user.role === 'admin' ? 'Admin' : 'User'}
+                  {user?.role === 'admin' ? 'Admin' : 'User'}
                 </div>
               </div>
 
+              {/* Settings */}
+              <button
+                onClick={() => {
+                  setUserOpen(false);
+                  onNavigate('admin-settings');
+                }}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 12px',
+                  borderRadius: 6,
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: C.text,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  fontFamily: FONT,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = C.primaryLight;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                <Settings size={14} />
+                Settings
+              </button>
+
+              {/* Sign Out */}
               <button
                 onClick={() => {
                   setUserOpen(false);
