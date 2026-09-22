@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend/public/forgemind-logo.gif" alt="DB Chat Logo" width="180"/>
+  <img src="frontend/public/dbchat-logo.gif" alt="DB Chat Logo" width="180"/>
 </p>
 
 <h1 align="center">DB Chat</h1>
