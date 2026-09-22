@@ -134,7 +134,7 @@ adminRouter.delete('/mcp/keys/:id', adminOnly, async (req, res) => {
 
 adminRouter.get('/mcp/install', adminOnly, (req, res) => {
   const proto = (req.headers['x-forwarded-proto'] || req.protocol || 'https').split(',')[0];
-  const host = req.headers['x-forwarded-host'] || req.headers.host || (process.env.FORGECRM_DOMAIN || '');
+  const host = req.headers['x-forwarded-host'] || req.headers.host || (process.env.DBCHAT_DOMAIN || '');
   const base = `${proto}://${host}`;
   const apiUrl = `${base}/api/mcp/v1`;
   const remoteUrl = `${base}/api/mcp/http/<YOUR_KEY>`;
@@ -148,10 +148,10 @@ adminRouter.get('/mcp/install', adminOnly, (req, res) => {
     serverPath,
     configSnippet: {
       mcpServers: {
-        'forgechat-agents': {
+        'dbchat-agents': {
           command: 'node',
           args: [serverPath],
-          env: { FORGECHAT_API_URL: apiUrl, FORGECHAT_API_KEY: 'fck_live_PASTE_YOUR_KEY' },
+          env: { DBCHAT_API_URL: apiUrl, DBCHAT_API_KEY: 'fck_live_PASTE_YOUR_KEY' },
         },
       },
     },
@@ -270,3 +270,4 @@ apiRouter.delete('/agents/:id', requireCap('delete'), async (req, res) => {
 });
 
 module.exports = { adminRouter, apiRouter, ensureMcpTables };
+

@@ -1,8 +1,8 @@
 {
-  "name": "forgecrm-backend",
+  "name": "dbchat-backend",
   "version": "1.2.1",
   "author": "sthirumalairajan2212",
-  "description": "ForgeChat backend API for WhatsApp chat viewer",
+  "description": "DB Chat backend API for WhatsApp chat viewer",
   "private": true,
   "license": "LicenseRef-Sustainable-Use-License",
   "main": "src/index.js",
@@ -38,3 +38,4 @@
     "uuid": "^11.1.1"
   }
 }
+

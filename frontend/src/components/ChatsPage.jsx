@@ -8,8 +8,8 @@ import { C } from '../constants.js';
 const MIN_CONTACT_W = 280;
 const MAX_CONTACT_W = 620;
 const DEFAULT_CONTACT_W = 380;
-const LS_WIDTH = 'forgecrm.chats.contactWidth';
-const LS_COLLAPSED = 'forgecrm.chats.navCollapsed';
+const LS_WIDTH = 'dbchat.chats.contactWidth';
+const LS_COLLAPSED = 'dbchat.chats.navCollapsed';
 
 // Keep the chat window usable no matter how wide the contacts panel is dragged.
 const NUM_W_EXPANDED = 320;   // NumberSidebar width when shown
@@ -170,3 +170,4 @@ export default function ChatsPage({ subParts = [], navigate, user }) {
     </div>
   );
 }
+

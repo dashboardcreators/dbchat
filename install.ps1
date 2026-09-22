@@ -1,5 +1,5 @@
 <#
-  ForgeChat one-command installer — Windows (local / testing).
+  DB Chat one-command installer — Windows (local / testing).
 
   Collapses the manual README steps into a single run: generates secrets,
   writes backend\.env, builds the images, starts the database, applies every
@@ -8,7 +8,7 @@
   Safe to re-run: it never overwrites an existing backend\.env, so your
   secrets are preserved. Delete backend\.env first to regenerate them.
 
-  Run in PowerShell, from inside the forgechat folder:
+  Run in PowerShell, from inside the dbchat folder:
       .\install.ps1
 
   (For a real 24/7 deployment with a domain, use a Linux server + install.sh.)
@@ -27,11 +27,11 @@ try { docker version *> $null } catch {
 }
 try { docker compose version *> $null } catch { Die "Docker Compose v2 isn't available. Update Docker Desktop, then re-run." }
 
-Say "ForgeChat installer (Windows - local mode, http://localhost)"
+Say "DB Chat installer (Windows - local mode, http://localhost)"
 
 # ── 1. Inputs ───────────────────────────────────────────────────────────────
-$ADMIN_EMAIL = Read-Host "Admin email [admin@forgechat.local]"
-if (-not $ADMIN_EMAIL) { $ADMIN_EMAIL = 'admin@forgechat.local' }
+$ADMIN_EMAIL = Read-Host "Admin email [admin@dbchat.local]"
+if (-not $ADMIN_EMAIL) { $ADMIN_EMAIL = 'admin@dbchat.local' }
 $pwSecure = Read-Host "Admin password [Admin@123456]" -AsSecureString
 $ADMIN_PASSWORD = [System.Net.NetworkCredential]::new('', $pwSecure).Password
 if (-not $ADMIN_PASSWORD) { $ADMIN_PASSWORD = 'Admin@123456' }
@@ -41,22 +41,22 @@ if (-not (Test-Path docker-compose.yml)) { Copy-Item docker-compose.sample.yml d
 
 # Local mode never starts Caddy, so nothing maps host port 80 - the frontend's
 # internal nginx (port 80) is unreachable from the host. Inject a "80:80"
-# mapping on the forgecrm-frontend service so http://localhost works out of the
-# box. Idempotent: only inject if forgecrm-frontend doesn't already have that
+# mapping on the dbchat-frontend service so http://localhost works out of the
+# box. Idempotent: only inject if dbchat-frontend doesn't already have that
 # port mapping inside its own block (the sample has "80:80" under caddy, so a
 # file-wide check would false-positive).
 $composeLines = Get-Content docker-compose.yml
 $inBlock = $false
 $hasPort = $false
 foreach ($line in $composeLines) {
-  if ($line -match '^  forgecrm-frontend:\s*$') { $inBlock = $true; continue }
+  if ($line -match '^  dbchat-frontend:\s*$') { $inBlock = $true; continue }
   if ($line -match '^  [a-z][a-z0-9_-]*:\s*$')   { $inBlock = $false }
   if ($inBlock -and $line -match '^\s+- "80:80"\s*$') { $hasPort = $true; break }
 }
 if (-not $hasPort) {
   $patched = foreach ($line in $composeLines) {
     $line
-    if ($line -match '^  forgecrm-frontend:\s*$') {
+    if ($line -match '^  dbchat-frontend:\s*$') {
       '    ports:'
       '      - "80:80"'
     }
@@ -76,11 +76,11 @@ if (Test-Path "backend\.env") {
 NODE_ENV=production
 PORT=3011
 POSTGRES_PASSWORD=$PGPASS
-DATABASE_URL=postgresql://postgres:$PGPASS@forgecrm-db:5432/postgres
+DATABASE_URL=postgresql://postgres:$PGPASS@dbchat-db:5432/postgres
 POSTGRES_SSL=false
 REDIS_URL=redis://redis:6379
 JWT_SECRET=$JWT
-FORGECRM_ENCRYPTION_KEY=$ENCKEY
+DBCHAT_ENCRYPTION_KEY=$ENCKEY
 CORS_ORIGIN=http://localhost
 META_API_VERSION=v21.0
 META_WEBHOOK_VERIFY_TOKEN=$VERIFY
@@ -97,19 +97,19 @@ docker compose build
 if ($LASTEXITCODE -ne 0) { Die "docker compose build failed." }
 
 Say "Starting database + Redis..."
-docker compose up -d forgecrm-db redis
+docker compose up -d dbchat-db redis
 Write-Host -NoNewline "Waiting for the database to be ready"
 do {
   Start-Sleep -Seconds 2
   Write-Host -NoNewline "."
-  $health = (docker inspect -f '{{.State.Health.Status}}' forgecrm-db 2>$null)
+  $health = (docker inspect -f '{{.State.Health.Status}}' dbchat-db 2>$null)
 } until ($health -eq 'healthy')
 Write-Host ""
 
 Say "Creating the schema and applying all migrations..."
 @"
 CREATE SCHEMA IF NOT EXISTS coexistence;
-CREATE TABLE IF NOT EXISTS coexistence.forgecrm_users (
+CREATE TABLE IF NOT EXISTS coexistence.dbchat_users (
   id BIGSERIAL PRIMARY KEY,
   username TEXT NOT NULL UNIQUE,
   email TEXT NOT NULL UNIQUE,
@@ -119,17 +119,17 @@ CREATE TABLE IF NOT EXISTS coexistence.forgecrm_users (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-"@ | docker exec -i forgecrm-db psql -U postgres -d postgres | Out-Null
+"@ | docker exec -i dbchat-db psql -U postgres -d postgres | Out-Null
 Get-ChildItem "db\migrations\*.sql" | Sort-Object Name | ForEach-Object {
-  Get-Content $_.FullName | docker exec -i forgecrm-db psql -U postgres -d postgres -v ON_ERROR_STOP=1 | Out-Null
+  Get-Content $_.FullName | docker exec -i dbchat-db psql -U postgres -d postgres -v ON_ERROR_STOP=1 | Out-Null
 }
 OK "Database ready."
 
 # ── 5. Start the app ────────────────────────────────────────────────────────
-docker compose up -d forgecrm-backend forgecrm-frontend
+docker compose up -d dbchat-backend dbchat-frontend
 
 Write-Host ""
-OK "ForgeChat is up!"
+OK "DB Chat is up!"
 Write-Host "  Open:   http://localhost"
 Write-Host "  Login:  $ADMIN_EMAIL"
 if ($VERIFY) { Write-Host "  Webhook verify token: $VERIFY   (save this - you'll need it when connecting WhatsApp)" }
@@ -138,3 +138,4 @@ Write-Host "To let WhatsApp reach this PC, open a Cloudflare Tunnel (no account 
 Write-Host "  winget install --id Cloudflare.cloudflared"
 Write-Host "  cloudflared tunnel --url http://localhost:80"
 Write-Host "then point CORS_ORIGIN + the Meta webhook at the https://...trycloudflare.com URL it prints."
+

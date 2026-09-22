@@ -1,8 +1,17 @@
 import {
-  Home, Zap, LayoutTemplate, MessageCircle, Users,
-  Megaphone, Image as ImageIcon, Info, KanbanSquare, Bot,
-  ChevronLeft, ChevronRight,
+  Home,
+  Zap,
+  LayoutTemplate,
+  MessageCircle,
+  Users,
+  Megaphone,
+  Image as ImageIcon,
+  KanbanSquare,
+  Bot,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
+
 import { C, FONT } from '../constants.js';
 
 const NAV_ITEMS = [
@@ -15,32 +24,44 @@ const NAV_ITEMS = [
   { id: 'contacts', label: 'Contacts', Icon: Users },
   { id: 'pipelines', label: 'Pipelines', Icon: KanbanSquare },
   { id: 'bulk-message', label: 'Bulk Message', Icon: Megaphone },
-  { id: 'about', label: 'About Us', Icon: Info },
 ];
 
-export default function Sidebar({ activePage, onPageChange, collapsed, setCollapsed, user }) {
-  // Admins see every nav item; other roles see only the pages granted to them
-  // (user.pages from the session). Falls back to all items if pages is missing.
-  const visibleItems = (user?.role === 'admin' || !Array.isArray(user?.pages))
-    ? NAV_ITEMS
-    : NAV_ITEMS.filter(item => user.pages.includes(item.id));
+export default function Sidebar({
+  activePage,
+  onPageChange,
+  collapsed,
+  setCollapsed,
+  user,
+}) {
+  const visibleItems =
+    user?.role === 'admin' || !Array.isArray(user?.pages)
+      ? NAV_ITEMS
+      : NAV_ITEMS.filter((item) => user.pages.includes(item.id));
+
   return (
-    <div style={{
-      width: collapsed ? 68 : 224,
-      minHeight: '100%',
-      background: C.sidebarBg,
-      borderRight: `1px solid ${C.sidebarBorder}`,
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-      transition: 'width .25s ease',
-      overflow: 'hidden',
-      position: 'relative',
-    }}>
-      {/* Nav items */}
-      <div style={{ padding: collapsed ? '10px 8px' : '14px 10px', flex: 1 }}>
-        {visibleItems.map(item => {
+    <div
+      style={{
+        width: collapsed ? 68 : 224,
+        minHeight: '100%',
+        background: C.sidebarBg,
+        borderRight: `1px solid ${C.sidebarBorder}`,
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+        transition: 'width .25s ease',
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      <div
+        style={{
+          padding: collapsed ? '10px 8px' : '14px 10px',
+          flex: 1,
+        }}
+      >
+        {visibleItems.map((item) => {
           const active = activePage === item.id;
+
           return (
             <div
               key={item.id}
@@ -65,37 +86,49 @@ export default function Sidebar({ activePage, onPageChange, collapsed, setCollap
                 overflow: 'hidden',
                 userSelect: 'none',
               }}
-              onMouseEnter={e => {
+              onMouseEnter={(e) => {
                 if (!active) {
                   e.currentTarget.style.background = '#EFEEE6';
                   e.currentTarget.style.color = '#111';
                 }
               }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = active ? C.primary : 'transparent';
-                e.currentTarget.style.color = active ? '#fff' : '#111';
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = active
+                  ? C.primary
+                  : 'transparent';
+
+                e.currentTarget.style.color = active
+                  ? '#fff'
+                  : '#111';
               }}
             >
-              <span style={{
-                width: 20,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                opacity: active ? 1 : 0.75,
-              }}>
+              <span
+                style={{
+                  width: 20,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  opacity: active ? 1 : 0.75,
+                }}
+              >
                 <item.Icon size={16} />
               </span>
-              {!collapsed && <span style={{ letterSpacing: '-.01em' }}>{item.label}</span>}
+
+              {!collapsed && (
+                <span style={{ letterSpacing: '-.01em' }}>
+                  {item.label}
+                </span>
+              )}
             </div>
           );
         })}
       </div>
 
-      {/* Collapse button + watermark */}
+      {/* Collapse only — no Powered by text here */}
       <div style={{ borderTop: `1px solid #F0F0EA` }}>
         <div
-          onClick={() => setCollapsed(p => !p)}
+          onClick={() => setCollapsed((p) => !p)}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -105,47 +138,43 @@ export default function Sidebar({ activePage, onPageChange, collapsed, setCollap
             justifyContent: collapsed ? 'center' : 'flex-start',
             transition: 'background .15s',
           }}
-          onMouseEnter={e => e.currentTarget.style.background = '#EFEEE6'}
-          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#EFEEE6';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent';
+          }}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          <span style={{ display: 'flex', alignItems: 'center', color: '#888', lineHeight: 1 }}>
-            {collapsed ? <ChevronRight size={22} strokeWidth={2.5} /> : <ChevronLeft size={22} strokeWidth={2.5} />}
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              color: '#888',
+              lineHeight: 1,
+            }}
+          >
+            {collapsed ? (
+              <ChevronRight size={22} strokeWidth={2.5} />
+            ) : (
+              <ChevronLeft size={22} strokeWidth={2.5} />
+            )}
           </span>
+
           {!collapsed && (
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#888', fontFamily: FONT, lineHeight: 1 }}>
+            <span
+              style={{
+                fontSize: 15,
+                fontWeight: 600,
+                color: '#888',
+                fontFamily: FONT,
+                lineHeight: 1,
+              }}
+            >
               Collapse
             </span>
           )}
         </div>
-        {!collapsed && (
-          <div style={{ padding: '0 14px 10px' }}>
-            <span style={{
-              fontSize: 9,
-              fontWeight: 600,
-              color: '#ccc',
-              fontFamily: FONT,
-              letterSpacing: '.06em',
-              textTransform: 'uppercase',
-            }}>
-              Powered by FMOS
-            </span>
-          </div>
-        )}
-        {collapsed && (
-          <div style={{ padding: '0 0 8px', textAlign: 'center' }}>
-            <span style={{
-              fontSize: 7,
-              fontWeight: 600,
-              color: '#ddd',
-              fontFamily: FONT,
-              letterSpacing: '.04em',
-              textTransform: 'uppercase',
-            }}>
-              FMOS
-            </span>
-          </div>
-        )}
       </div>
     </div>
   );

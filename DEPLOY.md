@@ -1,10 +1,10 @@
-# ForgeChat — Deployment Guide
+# DB Chat — Deployment Guide
 
-ForgeChat ships with a ready-to-run `docker-compose.yml`. For the normal install,
+DB Chat ships with a ready-to-run `docker-compose.yml`. For the normal install,
 follow the **Deploy** section of [`README.md`](./README.md):
 
 ```bash
-git clone https://github.com/Forgemind-git/ForgeChat.git && cd ForgeChat
+git clone https://github.com/Dashboard Creators-git/DB Chat.git && cd DB Chat
 
 # Server with a domain + automatic HTTPS (required for WhatsApp) — recommended:
 ./install.sh                               # asks for your domain, checks DNS/ports, deploys
@@ -28,10 +28,10 @@ may still want.
 
 | Service | Image | Purpose |
 |---|---|---|
-| `forgecrm-db` | `postgres:15` | All data in the `coexistence` schema (no host port) |
+| `dbchat-db` | `postgres:15` | All data in the `coexistence` schema (no host port) |
 | `redis` | `redis:7-alpine` | BullMQ send + media-download queues |
-| `forgecrm-backend` | built from `backend/Dockerfile` (context = repo root) | Express API + workers + boot migration runner |
-| `forgecrm-frontend` | built from `frontend/Dockerfile` (`nginx` after `vite build`) | React SPA; proxies `/api`, `/uploads`, `/l/` to the backend |
+| `dbchat-backend` | built from `backend/Dockerfile` (context = repo root) | Express API + workers + boot migration runner |
+| `dbchat-frontend` | built from `frontend/Dockerfile` (`nginx` after `vite build`) | React SPA; proxies `/api`, `/uploads`, `/l/` to the backend |
 | `caddy` *(prod overlay only)* | `caddy:2` | Automatic Let's Encrypt TLS, driven by `$DOMAIN` |
 
 The backend image is built with the **repo root** as the build context (so
@@ -42,10 +42,10 @@ The backend image is built with the **repo root** as the build context (so
 
 | Volume | Mount | Purpose | Backup priority |
 |---|---|---|---|
-| `pgdata` | `forgecrm-db:/var/lib/postgresql/data` | **All CRM data** incl. AES-encrypted Meta tokens | **Critical** — back up daily |
-| `secrets` | `forgecrm-backend:/app/data` | **Auto-generated JWT + encryption key** (`instance.json`) | **Critical** — losing it makes encrypted WhatsApp tokens unreadable |
-| `media` | `forgecrm-backend:/app/media` | Downloaded WhatsApp media | Medium |
-| `uploads` | `forgecrm-backend:/app/uploads` | Uploaded files / profile pictures | Low |
+| `pgdata` | `dbchat-db:/var/lib/postgresql/data` | **All CRM data** incl. AES-encrypted Meta tokens | **Critical** — back up daily |
+| `secrets` | `dbchat-backend:/app/data` | **Auto-generated JWT + encryption key** (`instance.json`) | **Critical** — losing it makes encrypted WhatsApp tokens unreadable |
+| `media` | `dbchat-backend:/app/media` | Downloaded WhatsApp media | Medium |
+| `uploads` | `dbchat-backend:/app/uploads` | Uploaded files / profile pictures | Low |
 | `redisdata` | `redis:/data` | Queue state | Medium |
 | `caddy_data` / `caddy_config` *(prod)* | `caddy:/data`, `/config` | TLS certs | Low (regenerable) |
 
@@ -57,7 +57,7 @@ wired by the compose file. To override anything, create a root `.env` next to
 
 - `POSTGRES_PASSWORD` — bundled DB password (changing it later needs `docker compose down -v`)
 - `HTTP_PORT` — host port for the UI (default `8080`)
-- `JWT_SECRET` / `FORGECRM_ENCRYPTION_KEY` — pin specific values instead of the auto-generated ones (don't change the encryption key after data is encrypted)
+- `JWT_SECRET` / `DBCHAT_ENCRYPTION_KEY` — pin specific values instead of the auto-generated ones (don't change the encryption key after data is encrypted)
 - `ADMIN_EMAIL` + `ADMIN_PASSWORD` — headless admin seed (skips the setup wizard)
 - `META_APP_SECRET`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_*` — optional feature keys
 - WhatsApp accounts themselves are connected in the UI (Settings → WhatsApp), not via env.
@@ -73,9 +73,9 @@ first-run wizard handles it.
 ## 5. Host cron jobs (optional maintenance)
 
 ```cron
-0  3  * * *  cd /path/to/ForgeChat && docker compose exec -T forgecrm-backend node scripts/cleanupMedia.js
-0  */4 * * * cd /path/to/ForgeChat && docker compose exec -T forgecrm-backend node scripts/syncTemplates.js
-0  2  * * *  cd /path/to/ForgeChat && docker compose exec -T forgecrm-backend node scripts/syncTemplateAnalytics.js
+0  3  * * *  cd /path/to/DB Chat && docker compose exec -T dbchat-backend node scripts/cleanupMedia.js
+0  */4 * * * cd /path/to/DB Chat && docker compose exec -T dbchat-backend node scripts/syncTemplates.js
+0  2  * * *  cd /path/to/DB Chat && docker compose exec -T dbchat-backend node scripts/syncTemplateAnalytics.js
 ```
 
 Without these you still get inbound webhooks + sends, but media disk grows, template
@@ -83,12 +83,12 @@ status drifts from Meta, and analytics doesn't refresh.
 
 ## 6. Backups
 
-Daily `pg_dump` of `forgecrm-db` is non-negotiable (it holds encrypted Meta tokens,
+Daily `pg_dump` of `dbchat-db` is non-negotiable (it holds encrypted Meta tokens,
 chats, contacts, templates, automations). Also keep the `secrets` volume — it holds
 the key that decrypts those tokens.
 
 ```bash
-0 4 * * * cd /path/to/ForgeChat && docker compose exec -T forgecrm-db pg_dump -U postgres postgres | gzip > /srv/backups/forgechat-$(date +\%Y\%m\%d).sql.gz
+0 4 * * * cd /path/to/DB Chat && docker compose exec -T dbchat-db pg_dump -U postgres postgres | gzip > /srv/backups/dbchat-$(date +\%Y\%m\%d).sql.gz
 # + sync /srv/backups off-host
 ```
 
@@ -96,7 +96,7 @@ the key that decrypts those tokens.
 
 ```bash
 docker compose ps                                  # all services Up/healthy
-docker compose logs forgecrm-backend | tail        # "[migrate] applied …", "Backend running on port 3011"
+docker compose logs dbchat-backend | tail        # "[migrate] applied …", "Backend running on port 3011"
 curl -fsS http://localhost:8080/api/auth/status    # → {"setupRequired":true} before setup
 ```
 
@@ -114,3 +114,4 @@ and send a real message to the business number — it should appear in **Chats**
 ---
 
 For day-to-day use see [`README.md`](./README.md). For low-level design see [`LLD.md`](./LLD.md).
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Refresh template analytics for every template that has a meta_template_id.
 // Run from host cron daily:
-//   0 2 * * * docker exec forgecrm-backend node scripts/syncTemplateAnalytics.js >> /var/log/forgecrm-analytics-sync.log 2>&1
+//   0 2 * * * docker exec dbchat-backend node scripts/syncTemplateAnalytics.js >> /var/log/dbchat-analytics-sync.log 2>&1
 
 require('dotenv').config();
 const pool = require('../src/db');
@@ -31,3 +31,5 @@ const { refreshOne } = require('../src/services/templateAnalytics');
   console.log(`[analytics-sync] Done. ok=${okCount} fail=${failCount} totalDataPoints=${totalPoints}`);
   process.exit(0);
 })().catch(err => { console.error('[analytics-sync] fatal:', err.message); process.exit(1); });
+
+

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Refresh all WhatsApp accounts' templates from Meta. Run from cron every 4h:
-//   docker exec forgecrm-backend node scripts/syncTemplates.js
+//   docker exec dbchat-backend node scripts/syncTemplates.js
 require('dotenv').config();
 const pool = require('../src/db');
 const { syncAccountTemplates } = require('../src/routes/templates');
@@ -29,3 +29,4 @@ const { markAccountHealth, classifyMetaError } = require('../src/services/accoun
   console.log(`[sync] done. updated=${totalUpdated} of ${totalRemote} (failed accounts: ${failed})`);
   process.exit(0);
 })().catch(err => { console.error('[sync] fatal:', err.message); process.exit(1); });
+

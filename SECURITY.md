@@ -1,9 +1,9 @@
 # Security Policy
 
-Forgemind Techhub LLP takes the security of ForgeChat seriously. ForgeChat
+Dashboard Creators Techhub LLP takes the security of DB Chat seriously. DB Chat
 handles WhatsApp Business conversations, contact data, and encrypted Meta access
 tokens, so we appreciate the work of security researchers and the wider
-community in keeping it safe. Thank you for helping protect ForgeChat and its
+community in keeping it safe. Thank you for helping protect DB Chat and its
 users.
 
 ## Reporting a Vulnerability
@@ -13,7 +13,7 @@ pull requests, or discussions.**
 
 Instead, report them privately by email to:
 
-> **security@forgemind.in** — subject line: `SECURITY: <short summary>`
+> **security@dashboardcreators.in** — subject line: `SECURITY: <short summary>`
 
 To help us triage quickly, please include as much of the following as you can:
 
@@ -43,7 +43,7 @@ named).
 
 ## Supported Versions
 
-ForgeChat is delivered as a continuously updated application. Security fixes are
+DB Chat is delivered as a continuously updated application. Security fixes are
 applied to the latest released version and the `main` branch only.
 
 | Version | Supported |
@@ -55,7 +55,7 @@ If you self-host, always run the latest version to receive security fixes.
 
 ## Scope
 
-**In scope** — vulnerabilities in the ForgeChat code maintained in this
+**In scope** — vulnerabilities in the DB Chat code maintained in this
 repository, for example:
 
 - Authentication / authorization flaws (JWT handling, the `forgecrm_token`
@@ -77,7 +77,7 @@ repository, for example:
   (e.g. weak `JWT` secret, committed `.env`, missing TLS, exposed database
   port).
 - Denial-of-service, volumetric, or rate-limit-exhaustion attacks.
-- Social engineering, phishing, or physical attacks against Forgemind staff or
+- Social engineering, phishing, or physical attacks against Dashboard Creators staff or
   infrastructure.
 - Reports from automated scanners without a demonstrated, exploitable impact.
 
@@ -97,7 +97,7 @@ action against you for such research, provided that you:
 
 ## Security Guidance for Self-Hosters
 
-If you deploy ForgeChat yourself, you are responsible for the security of your
+If you deploy DB Chat yourself, you are responsible for the security of your
 instance. Key practices (see the **Security** section of the
 [`README.md`](./README.md) for details):
 
@@ -110,4 +110,4 @@ instance. Key practices (see the **Security** section of the
 ---
 
 *This policy is governed by the version in the default branch of this
-repository and may be updated at any time. © 2026 Forgemind Techhub LLP.*
+repository and may be updated at any time. © 2026 Dashboard Creators Techhub LLP.*

@@ -38,7 +38,7 @@ async function ensureMcpTables() {
       key_hash     TEXT NOT NULL UNIQUE,
       is_enabled   BOOLEAN NOT NULL DEFAULT TRUE,
       last_used_at TIMESTAMPTZ,
-      created_by   BIGINT REFERENCES coexistence.forgecrm_users(id) ON DELETE SET NULL,
+      created_by   BIGINT REFERENCES coexistence.dbchat_users(id) ON DELETE SET NULL,
       created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`);
   await pool.query(`
@@ -216,3 +216,4 @@ module.exports = {
   ensureMcpTables, loadSettings, validateKey,
   listWaAccounts, listModels, listGoogleAccounts, searchSpreadsheets, listSheetTabs, readSheetValues, listMedia, listTemplates, getTemplate,
 };
+

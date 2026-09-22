@@ -1,5 +1,5 @@
 require('dotenv').config();
-// Resolve/auto-generate JWT_SECRET + FORGECRM_ENCRYPTION_KEY into process.env
+// Resolve/auto-generate JWT_SECRET + DBCHAT_ENCRYPTION_KEY into process.env
 // BEFORE any module that reads them at require-time (./auth, crypto consumers).
 require('./util/instanceSecrets').bootstrapSecrets();
 
@@ -103,7 +103,7 @@ const apiLimiter = rateLimit({
   skip: (req) => req.path === '/health',
   keyGenerator: (req) => {
     try {
-      const token = req.cookies?.forgecrm_token;
+      const token = req.cookies?.dbchat_token;
       if (token) {
         const decoded = require('jsonwebtoken').decode(token);
         if (decoded?.username) return `user:${decoded.username}`;
@@ -261,12 +261,12 @@ async function start() {
   setInterval(runTemplateSync, TEMPLATE_SYNC_MS).unref(); // every 10 min (gated by pending count)
 
   const server = app.listen(PORT, () => {
-    console.log(`[ForgeChat] Backend running on port ${PORT}`);
+    console.log(`[DB Chat] Backend running on port ${PORT}`);
   });
 
   // Graceful shutdown so BullMQ marks in-flight jobs as stalled (not lost)
   const shutdown = async (sig) => {
-    console.log(`[ForgeChat] ${sig} received, draining…`);
+    console.log(`[DB Chat] ${sig} received, draining…`);
     server.close(() => {});
     await shutdownMediaQueue();
     await shutdownSendQueue();
@@ -281,3 +281,5 @@ start().catch(err => {
   console.error('[Fatal] Failed to start:', err.message);
   process.exit(1);
 });
+
+

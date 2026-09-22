@@ -1,14 +1,14 @@
 # Authors
 
-ForgeChat is created and maintained by **Forgemind Techhub LLP**.
+DB Chat is created and maintained by **Dashboard Creators Techhub LLP**.
 
 ## Maintainer
 
-- Forgemind Techhub LLP — <contact@forgemind.in>
+- Dashboard Creators Techhub LLP — <contact@dashboardcreators.in>
 
 ## Contributors
 
-Thanks to everyone who has contributed to ForgeChat:
+Thanks to everyone who has contributed to DB Chat:
 
 - Akil Sadik M H ([@AKILSADIK](https://github.com/AKILSADIK))
 

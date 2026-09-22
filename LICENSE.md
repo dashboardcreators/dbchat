@@ -1,10 +1,10 @@
 # License
 
-Copyright (c) 2026 Forgemind Techhub LLP
+Copyright (c) 2026 Dashboard Creators Techhub LLP
 
 Portions of this software are licensed as follows:
 
-* All third party components incorporated into the ForgeChat software are
+* All third party components incorporated into the DB Chat software are
   licensed under the original license provided by the owner of the applicable
   component.
 * Content outside of the above mentioned restriction is available under the
@@ -81,7 +81,7 @@ claim.
 
 The "licensor" is the entity offering these terms, and the "software" is the
 software the licensor makes available under these terms, including any portion
-of it. In this license, the licensor is **Forgemind Techhub LLP**.
+of it. In this license, the licensor is **Dashboard Creators Techhub LLP**.
 
 "you" refers to the individual or entity agreeing to these terms.
 
@@ -98,4 +98,4 @@ terms.
 "use" means anything you do with the software requiring one of your licenses.
 
 "trademark" means trademarks, service marks, and similar rights. See
-[`TRADEMARK.md`](./TRADEMARK.md) for the Forgemind brand usage policy.
+[`TRADEMARK.md`](./TRADEMARK.md) for the Dashboard Creators brand usage policy.

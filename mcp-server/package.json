@@ -1,11 +1,11 @@
 {
-  "name": "forgechat-mcp",
+  "name": "dbchat-mcp",
   "version": "1.2.1",
   "author": "sthirumalairajan2212",
-  "description": "MCP server for building and managing ForgeChat WhatsApp AI agents from Claude Desktop.",
+  "description": "MCP server for building and managing DB Chat WhatsApp AI agents from Claude Desktop.",
   "type": "module",
   "bin": {
-    "forgechat-mcp": "src/index.js"
+    "dbchat-mcp": "src/index.js"
   },
   "main": "src/index.js",
   "scripts": {
@@ -20,3 +20,4 @@
     "zod": "^3.23.8"
   }
 }
+

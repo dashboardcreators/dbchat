@@ -36,7 +36,7 @@ async function performHandoff({ agentId, handoffUserIds, waNumber, contactNumber
 
   if (assignedUserId) {
     const { rows: ur } = await pool.query(
-      `SELECT id, COALESCE(display_name, username) AS name FROM coexistence.forgecrm_users WHERE id = $1 AND is_active = TRUE`,
+      `SELECT id, COALESCE(display_name, username) AS name FROM coexistence.dbchat_users WHERE id = $1 AND is_active = TRUE`,
       [assignedUserId],
     );
     if (ur[0]) assignedUserName = ur[0].name; else assignedUserId = null; // skip a deactivated BDA
@@ -85,3 +85,4 @@ function matchesAnyHandoffKeyword(messageBody, keywords) {
 }
 
 module.exports = { performHandoff, resumeAgent, isConversationPaused, matchesAnyHandoffKeyword };
+

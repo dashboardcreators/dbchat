@@ -9,7 +9,7 @@ function buildPool() {
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 5000,
-      application_name: 'forgecrm-backend',
+      application_name: 'dbchat-backend',
     });
   }
 
@@ -24,7 +24,7 @@ function buildPool() {
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 5000,
-    application_name: 'forgecrm-backend',
+    application_name: 'dbchat-backend',
   });
 }
 
@@ -35,3 +35,4 @@ pool.on('error', (err) => {
 });
 
 module.exports = pool;
+

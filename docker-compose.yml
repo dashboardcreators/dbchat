@@ -1,14 +1,14 @@
-# ForgeChat — standalone deployment
+# DB Chat — standalone deployment
 
 services:
 
-  forgecrm-db:
+  dbchat-db:
     image: postgres:15
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-forgechat}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dbchat}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -28,7 +28,7 @@ services:
       timeout: 3s
       retries: 12
 
-  forgecrm-backend:
+  dbchat-backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -37,9 +37,9 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3011"
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-forgechat}@forgecrm-db:5432/postgres
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-dbchat}@dbchat-db:5432/postgres
       REDIS_URL: redis://redis:6379
-      FORGECHAT_DATA_DIR: /app/data
+      DBCHAT_DATA_DIR: /app/data
 
     env_file:
       - path: ./backend/.env
@@ -51,28 +51,28 @@ services:
       - uploads:/app/uploads
 
     depends_on:
-      forgecrm-db:
+      dbchat-db:
         condition: service_healthy
       redis:
         condition: service_healthy
 
-  forgecrm-frontend:
+  dbchat-frontend:
     build:
       context: ./frontend
     restart: unless-stopped
     ports:
       - "80:80"
     depends_on:
-      - forgecrm-backend
+      - dbchat-backend
 
   tunnel:
     image: cloudflare/cloudflared:latest
     profiles:
       - tunnel
     restart: unless-stopped
-    command: tunnel --no-autoupdate --url http://forgecrm-frontend:80
+    command: tunnel --no-autoupdate --url http://dbchat-frontend:80
     depends_on:
-      - forgecrm-frontend
+      - dbchat-frontend
 
 volumes:
   pgdata:

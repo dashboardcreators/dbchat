@@ -1,6 +1,6 @@
 # Versioning & Upgrade Policy
 
-ForgeChat follows [Semantic Versioning](https://semver.org/). This page is the
+DB Chat follows [Semantic Versioning](https://semver.org/). This page is the
 contract self-hosters rely on to upgrade safely.
 
 ## What each version bump means

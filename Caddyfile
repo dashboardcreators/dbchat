@@ -5,5 +5,6 @@
 # proxies /api, /uploads, /l/ to the backend.
 # Requires: DNS A record for $DOMAIN -> this host, ports 80 + 443 open.
 {$DOMAIN} {
-    reverse_proxy forgecrm-frontend:80
+    reverse_proxy dbchat-frontend:80
 }
+

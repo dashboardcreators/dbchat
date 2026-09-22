@@ -1,13 +1,11 @@
-import { Globe, Instagram, Youtube, Facebook, Github, ExternalLink } from 'lucide-react';
+import { Globe, Instagram, Github, ExternalLink } from 'lucide-react';
 import { C, FONT } from '../constants.js';
 
-// Forgemind links surfaced on the About Us page. Each opens in a new tab.
+// Dashboard Creators links surfaced on the About Us page. Each opens in a new tab.
 const LINKS = [
-  { label: 'Website',   sub: 'forgemind.in',                 url: 'https://forgemind.in/',                      Icon: Globe,     color: '#2563EB', img: '/forgemind-logo.png' },
-  { label: 'Instagram', sub: '@forgemind_ai',                url: 'https://www.instagram.com/forgemind_ai/',    Icon: Instagram, color: '#E1306C' },
-  { label: 'YouTube',   sub: '@forgemind_ai',                url: 'https://www.youtube.com/@forgemind_ai',      Icon: Youtube,   color: '#FF0000' },
-  { label: 'Facebook',  sub: 'forgemindai',                  url: 'https://www.facebook.com/forgemindai',       Icon: Facebook,  color: '#1877F2' },
-  { label: 'GitHub',    sub: 'Forgemind-git',                url: 'https://github.com/Forgemind-git',           Icon: Github,    color: '#111111' },
+  { label: 'Website',   sub: 'dashboardcreators.in',                 url: 'https://dashboardcreators.in/',                      Icon: Globe,     color: '#2563EB' },
+  { label: 'Instagram', sub: '@dashboard_creators', url: 'https://www.instagram.com/dashboard_creators/?hl=am-et',    Icon: Instagram, color: '#E1306C' },
+  { label: 'GitHub',    sub: 'Dashboard Creators-git',                url: 'https://github.com/Dashboard Creators-git',           Icon: Github,    color: '#111111' },
 ];
 
 export default function AboutUsPage() {
@@ -16,14 +14,14 @@ export default function AboutUsPage() {
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 32 }}>
         <img
-          src="/forgemind-logo.gif"
-          alt="Forgemind"
+          src="/dbchat-logo.gif"
+          alt="Dashboard Creators"
           style={{ height: 64, width: 64, objectFit: 'contain', marginBottom: 14 }}
           onError={e => { e.currentTarget.style.display = 'none'; }}
         />
-        <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>About FORGEMIND <span style={{ color: C.primary }}>AI</span></h1>
+        <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>About DBchat</h1>
         <p style={{ fontSize: 14, color: C.textSecondary, margin: '10px auto 0', maxWidth: 540, lineHeight: 1.6 }}>
-          Forgemind builds practical AI automation tools — including this WhatsApp CRM.
+          Dashboard Creators builds practical AI automation tools — including this WhatsApp CRM.
           Follow us and explore our work through the links below.
         </p>
       </div>
@@ -79,8 +77,15 @@ export default function AboutUsPage() {
       </div>
 
       <div style={{ textAlign: 'center', marginTop: 36, fontSize: 12, color: C.textMuted }}>
-        © {new Date().getFullYear()} Forgemind · Powered by FMOS
+        © {new Date().getFullYear()} Dashboard Creators · Powered by Dashboard Creators
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
